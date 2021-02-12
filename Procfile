@@ -1,0 +1,1 @@
+web: gunicorn all_in_one.wsgi --log-file -
