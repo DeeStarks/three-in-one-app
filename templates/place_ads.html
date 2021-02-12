@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .cover{
+        height: calc(100% - 70px);
+        padding: 50px 100px !important;
+    }
+    @media(max-width: 500px){
+        .cover{
+            padding: 50px 30px !important;
+        }
+    }
+    .note{
+        font-weight: 700;
+        font-size: 20px;
+    }
+    label{
+        background-color: #00000025;
+        cursor: pointer;
+    }
+    label, .file_display, .submit{
+        width: 100%;
+        border: 1px solid #0000003f;
+        padding: 20px !important;
+        text-align: center;
+        border-radius: 0 !important;
+    }
+    input{
+        display: none;
+    }
+    .file_display{
+        padding: 0 !important;
+    }
+    #file_preview{
+        width: auto;
+        max-width: 70%;
+        height: auto !important;
+    }
+</style>
+<div class="cover">
+   <div class="note text-dark text-center py-5">PLACE ADS HERE.</div>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-12">
+                <label for="banner">Click to upload banner</label>
+                <input type="file" name="banner" id="banner">
+            </div>
+            <div class="col-md-12">
+                <div class="file_display">
+                    <img src="" alt="" id="file_preview" class="file_display">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-info submit">SUBMIT</button>
+            </div>
+        </div>
+    </form>
+    <div class="message {{ message.color }} py-5 text-center">{{ message }}</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    // Preview image before upload
+    function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            $('#file_preview').attr('src', e.target.result);
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+    }
+
+    $("#banner").change(function() {
+        readURL(this);
+    });
+</script>
+{% endblock %}

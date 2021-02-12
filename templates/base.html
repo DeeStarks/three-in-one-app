@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Three-in-one app</title>
+    <style>
+        *{
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: 'Montserrat', sans-serif !important;
+        }
+        .navbar{
+            z-index: 2 !important;
+            min-height: 70px;
+            padding-left: 30px !important;
+            padding-right: 30px !important;
+        }
+        .navbar-brand{
+            display: block;
+            padding: 20px 20px !important;
+            margin: -3px !important;
+            transition: 200ms;
+            color: white;
+            font-weight: bold !important;
+        }
+        .nav-link{
+            display: block;
+            padding: 25px 20px !important;
+            transition: 200ms;
+            font-size: 14px;
+            color: white !important;
+            font-weight: 300;
+            text-align: center;
+        }
+        .nav-link:hover{
+            background-color: #187382 !important;
+        }
+        .active{
+            background-color: #187382 !important;
+        }
+        .navbar-toggler{
+            color: white !important;
+            border: 2px solid white;
+            outline: none !important;
+            width: 50px;
+            height: 50px !important;
+            border-radius: 0 !important;
+        }
+        #toggle_content{
+            position: fixed;
+            width: 100%;
+            left: 0;
+            top: -300px;
+            z-index: 1 !important;
+            transition: 200ms;
+        }
+        @media(max-width:400px){
+            .navbar{
+                padding-left: 10px !important;
+                padding-right: 15px !important;
+            }
+        }
+        .nav_content{
+            position: relative;
+        }
+    </style>
+</head>
+<body onclick="removeNav()">
+    <nav class="navbar navbar-expand-lg navbar-info bg-info fixed-top border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">THREE IN ONE</a>
+            <button id="toggle" onclick="toggleNav()" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="">
+                <div class="ml-auto">
+                    <div class="navbar-nav">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'upload' %}active{% endif %}" aria-current="page" href="{% url 'upload' %}">Excel Upload System</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'advert' or request.resolver_match.url_name == 'place_advert' or request.resolver_match.url_name == 'view_ad' %}active{% endif %}" href="{% url 'advert' %}">Advert App</a>
+                        <a class="nav-link  {% if request.resolver_match.url_name == 'lookup' %}active{% endif %}" href="{% url 'lookup' %}">Search App</a>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+    </nav>
+    <div id="toggle_content" class="toggle_content bg-info">
+        <div class="nav_content">
+            <a class="nav-link {% if request.resolver_match.url_name == 'upload' %}active{% endif %}" aria-current="page" href="{% url 'upload' %}">Excel Upload System</a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'advert' or request.resolver_match.url_name == 'place_advert' or request.resolver_match.url_name == 'view_ad' %}active{% endif %}" href="{% url 'advert' %}">Advert App</a>
+            <a class="nav-link  {% if request.resolver_match.url_name == 'lookup' %}active{% endif %}" href="{% url 'lookup' %}">Search App</a>
+        </div>
+    </div>
+    <br><br><br> 
+    {% block content %}
+
+    {% endblock %}
+    <script>
+        function toggleNav() {
+            let element = document.getElementById('toggle_content');
+            let style = window.getComputedStyle(element);
+            let toggle_content_top = style.getPropertyValue('top');
+
+            if(toggle_content_top == '70px'){
+                document.getElementById('toggle_content').style.top = '-300px'
+            }else if(toggle_content_top == '-300px'){
+                document.getElementById('toggle_content').style.top = '70px'
+            }
+        }
+
+        function removeNav(){
+            let element = document.getElementById('toggle_content');
+            let style = window.getComputedStyle(element);
+            let toggle_content_top = style.getPropertyValue('top');
+
+            if(toggle_content_top == '70px'){
+                document.getElementById('toggle_content').style.top = '-300px'
+            }
+        }
+
+        
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+</body>
+</html>

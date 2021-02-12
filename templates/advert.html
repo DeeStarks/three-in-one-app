@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .cover{
+        min-height: calc(100% - 70px);
+    }
+    .banner{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+        width: 80%;
+        max-height: 70%;
+        box-shadow: 0px 1px 10px #00000038;
+        padding: 2% !important;
+        display: flex;
+        justify-content: center;
+    }
+    .place{
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        bottom: 30px;
+    }
+    #view_ad{
+        position: absolute;
+        z-index: 10;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+        color: white;
+        font-weight: bold;
+        font-size: 25px;
+        text-shadow: 1px 2px 10px black;
+        display: none;
+        transition: 50ms;
+    }
+    .place a{
+        display: block;
+        padding: 10px 20px !important;
+        border-radius: 0 !important;
+    }
+    .carousel-item{
+        overflow: hidden;
+    }
+    .carousel-item a{
+        color: white;
+        transition: 50ms;
+    }
+    .carousel-item a img{
+        transition: 50ms;
+    }
+    .carousel-item a img:hover{
+        filter: blur(3px);
+    }
+    .no_ad{
+        text-align: center;
+        font-weight: bold;
+        text-shadow: 1px 3px 10px #ffffffb9;
+        font-size: 20px;
+    }
+</style>
+<div class="cover">
+    <div class="banner bg-light">
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                {% for advert in adverts %}
+                {% if forloop.counter == 1 %}
+                <div class="carousel-item active">
+                    <a href="{% url 'view_ad' advert.id %}">
+                        <div id="view_ad">VIEW AD</div>
+                        <img class="" src="{{ advert.banner.url }}" alt="First slide" style="max-width: 100% !important; height: auto; min-height: 76%;">
+                    </a>
+                </div>
+                {% else %}
+                <div class="carousel-item">
+                    <a href="{% url 'view_ad' advert.id %}">
+                        <div id="view_ad">VIEW AD</div>
+                        <img class="" src="{{ advert.banner.url }}" alt="First slide" style="max-width: 100% !important; height: auto;">
+                    </a>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="place">
+        <a href="{% url 'place_advert' %}" class="btn btn-info">PLACE ADS</a>
+    </div>
+</div>
+{% endblock %}

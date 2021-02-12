@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    label{
+        color: #0000009f;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    input, select{
+        border: none !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        line-height: 60px !important;
+        padding: 0 20px !important;
+        font-weight: 700 !important;
+        font-size: 20px !important;
+        color: #000000a4;
+    }
+    select{
+        height: 60px !important;
+        outline: none !important;
+        cursor: pointer;
+        width: 100% !important;
+    }
+    option{
+        font-size: 15px !important;
+    }
+    .input_field{
+        border: 1px solid #0000003b;
+        height: 100px;
+    }
+    .submit{
+        line-height: 100px !important;
+        color: white;
+        outline: none !important;
+        font-weight: bold;
+        transition: 200ms;
+    }
+    .submit:hover{
+        color: #ffffffd3
+    }
+    .submit:focus{
+        background-color: #1d6570 !important;
+    }
+    th, td{
+        padding: 20px !important;
+        font-size: 13px;
+    }
+    .list{
+        margin: 50px 5% !important;
+        width: 90%;
+        overflow-x: scroll;
+        border: 1px solid black;
+    }
+    #paginator{
+        display: flex;
+        justify-content: center;
+        margin: 5px 0 !important;
+    }
+    #paginator form{
+        display: inline;
+    }
+    .paginator_button{
+        padding: 10px 20px !important;
+        border-radius: 0 !important;
+    }
+    </style>
+<div class="my-5">
+    <form method="GET" id="search_form">
+        <div class="row mx-5 search_box">
+            <div class="col-md-7 col-sm-12 input_field">
+                <label for="user" class="px-4 py-1">KEYWORD</label>
+                <input type="text" placeholder="Type keyword e.g. Adriano" id="user" name="search" class="form-control">
+            </div>
+            <div class="col-md-3 col-sm-12 input_field">
+                <label for="type" class="px-4 py-1">SEARCH BY</label>
+                <div class="row">
+                    <div class="col-9">
+                        <select name="type" id="type">
+                            <option value="all">All</option>
+                            <option value="first_name">First Name</option>
+                            <option value="last_name">Last Name</option>
+                            <option value="email">Email</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <input type="submit" value="SEARCH" class="submit bg-info">
+            </div>
+        </div>
+    </form>
+    <div class="list">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Firstname</th>
+                    <th scope="col">Lastname</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                </tr>
+            </thead>
+            <tbody id="values">
+                
+            </tbody>
+        </table>
+        <div id="no_match"></div>
+    </div>
+    <div id="paginator">
+        
+    </div>
+</div>
+<script>
+    function buildPage(){
+        let content = document.getElementById('values')
+        let paginator = document.getElementById("paginator")
+
+        fetch('http://127.0.0.1:8000/api/users/')
+        .then((res) => res.json())
+        .then((data) => {
+            for(let i = 0; i < data.results.length; i++){
+                content.innerHTML += `
+                <tr>
+                    <td>${data.results[i].first_name}</td>
+                    <td>${data.results[i].last_name}</td>
+                    <td>${data.results[i].email}</td>
+                    <td>${data.results[i].phone}</td>
+                </tr>`
+            }
+            paginator.innerHTML = `
+                <form">
+                    <input type="hidden" name="page" value="${data.previous}" id="prev_value">
+                    <button class="btn btn-info paginator_button ${data.previous == null ? "disabled" : ""}" type="button" onclick="showPrev()" >Prev</button>
+                </form>
+                <form>
+                    <input type="hidden" name="page" value="${data.next}" id="next_value">
+                    <button class="btn btn-info paginator_button ${data.next == null ? "disabled" : ""}" type="button" onclick="showNext()">Next</button>
+                </form>`
+        })
+    }
+    buildPage()
+
+    let form = document.getElementById('search_form')
+    form.onsubmit = (e) => {
+        e.preventDefault()
+        
+        let content = document.getElementById('values')
+        let search = document.getElementById('user').value
+        let type = document.getElementById('type').value
+        let paginator = document.getElementById("paginator")
+        let url = `http://127.0.0.1:8000/api/users/?search=${search}&type=${type}`
+
+        content.innerHTML = ''
+        document.getElementById("no_match").innerHTML = ''
+
+        fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+            if(data.count == 0){
+                document.getElementById("no_match").innerHTML += `<div style="font-weight: bold; font-style: italic; text-align: center; padding: 20px !important">0 matching results found for "${search}" in "${type.replace(/_/g, ' ')}"`
+            }else{
+                for(let i = 0; i < data.results.length; i++){
+                    content.innerHTML += `
+                    <tr>
+                        <td>${data.results[i].first_name}</td>
+                        <td>${data.results[i].last_name}</td>
+                        <td>${data.results[i].email}</td>
+                        <td>${data.results[i].phone}</td>
+                    </tr>`
+                }
+            }
+
+            paginator.innerHTML = `
+                <form">
+                    <input type="hidden" name="page" value="${data.previous}" id="prev_value">
+                    <button class="btn btn-info paginator_button ${data.previous == null ? "disabled" : ""}" type="button" onclick="showPrev()" >Prev</button>
+                </form>
+                <form>
+                    <input type="hidden" name="page" value="${data.next}" id="next_value">
+                    <button class="btn btn-info paginator_button ${data.next == null ? "disabled" : ""}" type="button" onclick="showNext()">Next</button>
+                </form>`
+        })
+    }
+
+    function showPrev() {
+        let content = document.getElementById('values')
+        let value = document.getElementById("prev_value").value
+        let paginator = document.getElementById("paginator")
+        let url = value
+
+        content.innerHTML = ''
+        document.getElementById("no_match").innerHTML = ''
+
+        fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+            for(let i = 0; i < data.results.length; i++){
+                content.innerHTML += `
+                <tr>
+                    <td>${data.results[i].first_name}</td>
+                    <td>${data.results[i].last_name}</td>
+                    <td>${data.results[i].email}</td>
+                    <td>${data.results[i].phone}</td>
+                </tr>`
+            }
+
+            paginator.innerHTML = `
+                <form">
+                    <input type="hidden" name="page" value="${data.previous}" id="prev_value">
+                    <button class="btn btn-info paginator_button ${data.previous == null ? "disabled" : ""}" type="button" onclick="showPrev()" >Prev</button>
+                </form>
+                <form>
+                    <input type="hidden" name="page" value="${data.next}" id="next_value">
+                    <button class="btn btn-info paginator_button ${data.next == null ? "disabled" : ""}" type="button" onclick="showNext()">Next</button>
+                </form>`
+        })
+    }
+    
+    function showNext() {
+        let content = document.getElementById('values')
+        let value = document.getElementById("next_value").value
+        let paginator = document.getElementById("paginator")
+        let url = value
+
+        content.innerHTML = ''
+        document.getElementById("no_match").innerHTML = ''
+
+        fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+            for(let i = 0; i < data.results.length; i++){
+                content.innerHTML += `
+                <tr>
+                    <td>${data.results[i].first_name}</td>
+                    <td>${data.results[i].last_name}</td>
+                    <td>${data.results[i].email}</td>
+                    <td>${data.results[i].phone}</td>
+                </tr>`
+            }
+
+            paginator.innerHTML = `
+                <form">
+                    <input type="hidden" name="page" value="${data.previous}" id="prev_value">
+                    <button class="btn btn-info paginator_button ${data.previous == null ? "disabled" : ""}" type="button" onclick="showPrev()" >Prev</button>
+                </form>
+                <form>
+                    <input type="hidden" name="page" value="${data.next}" id="next_value">
+                    <button class="btn btn-info paginator_button ${data.next == null ? "disabled" : ""}" type="button" onclick="showNext()">Next</button>
+                </form>`
+        })
+    }
+</script>
+{% endblock %}

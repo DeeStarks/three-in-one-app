@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .container{
+        padding: 2% 10% !important;
+    }
+    .banner{
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+        max-width: 90%;
+    }
+    .banner img{
+        max-width: 80vw !important;
+        min-width: 80vw !important;
+    }
+    .impression{
+        position: fixed;
+        top: 15%;
+        left: 50%;
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+        font-weight: 700;
+        font-size: 20px;
+        color: black !important;
+        text-align: center;
+        background-color: white;
+        padding: 10px 50px !important;
+        border-radius: 50px;
+        box-shadow: 1px 2px 10px #0000007c;
+    }
+</style>
+<div class="container">
+    <div class="banner">
+        <img src="{{ banner }}" alt="">
+    </div>
+    <div class="impression">Advert Impression: {{ impression }}%</div>
+</div>
+{% endblock %}
