@@ -77,14 +77,14 @@
                 <div class="carousel-item active">
                     <a href="{% url 'view_ad' advert.id %}">
                         <div id="view_ad">VIEW AD</div>
-                        <img class="" src="{{ advert.banner.url }}" alt="First slide" style="max-width: 100% !important; height: auto; min-height: 76%;">
+                        <img class="" src="{{ advert.banner.url }}" alt="{{ advert.banner }}" style="max-width: 100% !important; height: auto; min-height: 76%;">
                     </a>
                 </div>
                 {% else %}
                 <div class="carousel-item">
                     <a href="{% url 'view_ad' advert.id %}">
                         <div id="view_ad">VIEW AD</div>
-                        <img class="" src="{{ advert.banner.url }}" alt="First slide" style="max-width: 100% !important; height: auto;">
+                        <img class="" src="{{ advert.banner.url }}" alt="{{ advert.banner }}" style="max-width: 100% !important; height: auto;">
                     </a>
                 </div>
                 {% endif %}
