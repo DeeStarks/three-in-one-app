@@ -116,7 +116,7 @@
         let content = document.getElementById('values')
         let paginator = document.getElementById("paginator")
 
-        fetch('http://127.0.0.1:8000/api/users/')
+        fetch('https://project-all-in-one.herokuapp.com/api/users/')
         .then((res) => res.json())
         .then((data) => {
             for(let i = 0; i < data.results.length; i++){
@@ -149,7 +149,7 @@
         let search = document.getElementById('user').value
         let type = document.getElementById('type').value
         let paginator = document.getElementById("paginator")
-        let url = `http://127.0.0.1:8000/api/users/?search=${search}&type=${type}`
+        let url = `https://project-all-in-one.herokuapp.com/api/users/?search=${search}&type=${type}`
 
         content.innerHTML = ''
         document.getElementById("no_match").innerHTML = ''
